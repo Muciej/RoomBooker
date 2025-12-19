@@ -23,7 +23,7 @@ async fn main() {
         .layer(CorsLayer::new().allow_origin(Any).allow_methods(Any));
 
     // Start server
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     println!("🚀 Server running on http://{}", addr);
 
     axum::serve(tokio::net::TcpListener::bind(addr).await.unwrap(), app)
