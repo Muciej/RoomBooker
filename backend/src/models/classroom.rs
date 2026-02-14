@@ -3,7 +3,7 @@ use sqlx::FromRow;
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
 pub struct Classroom {
-    pub id: i16,
-    pub name: String,
-    pub class_number: i32,
+    pub class_id: i32,
+    pub class_name: Option<String>,
+    pub class_number: Option<i32>,
 }

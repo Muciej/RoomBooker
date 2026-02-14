@@ -1,14 +1,28 @@
-use axum::{extract::State, response::Json};
+use axum::{extract::State, response::Html};
 use sqlx::PgPool;
-use serde_json::json;
 
 use crate::models::classroom::Classroom;
 
-pub async fn get_classrooms(State(pool): State<PgPool>) -> Json<serde_json::Value> {
-    let rows = sqlx::query_as::<_, Classroom>("SELECT * FROM classrooms")
+pub async fn get_classrooms(State(pool): State<PgPool>) -> Html<String> {
+    let classrooms: Vec<Classroom> = sqlx::query_as::<_, Classroom>("SELECT * FROM classrooms")
         .fetch_all(&pool)
         .await
         .unwrap_or_else(|_| vec![]);
 
-    Json(json!({ "classrooms": rows }))
+    let mut html = String::from("<h1>Classrooms</h1><ul>");
+
+
+    for c in classrooms {
+
+        html.push_str(&format!(
+            "<li>ID: {} | Name: {:?} | Number: {:?}</li>",
+            c.class_id,
+            c.class_name.unwrap_or_else(|| "-".to_string()),
+            c.class_number
+        ));
+    }
+
+    html.push_str("</ul>");
+
+    Html(html)
 }

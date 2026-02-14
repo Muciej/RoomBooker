@@ -6,9 +6,10 @@ edition = "2024"
 [dependencies]
 axum = "0.8.8"
 dotenvy = "0.15.7"
+chrono = {version = "*", features = ["serde"]}
 serde = "1.0.228"
 serde_json = "1.0.149"
-sqlx = {version = "0.8.6", features = ["postgres", "runtime-tokio-rustls"]}
+sqlx = {version = "0.8.6", features = ["postgres", "runtime-tokio-rustls", "macros", "chrono"]}
 tokio = {version = "1.49.0", features = ["full"]}
 tower-http = {version = "0.6.8", features = ["cors"]}
 

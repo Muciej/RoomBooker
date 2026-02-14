@@ -1,3 +1,5 @@
+CREATE TYPE bookingstatus AS ENUM ('accepted', 'pending', 'rejected');
+
 CREATE TABLE Classrooms(
     class_id SERIAL PRIMARY KEY,
     class_name VARCHAR(30),
@@ -6,11 +8,11 @@ CREATE TABLE Classrooms(
 
 CREATE TABLE Bookings(
     booking_id SERIAL PRIMARY KEY,
-    class_id SERIAL REFERENCES Classrooms(class_id),
+    class_id INTEGER REFERENCES Classrooms(class_id) NOT NULL,
     booking_from TIMESTAMP NOT NULL,
     booking_to TIMESTAMP NOT NULL,
     booking_owner VARCHAR(80) NOT NULL,
-    booking_confirmed BOOLEAN NOT NULL
+    booking_confirmed bookingstatus NOT NULL
 );
 
 CREATE TABLE Administrators(
