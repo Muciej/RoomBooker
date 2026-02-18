@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Add Booking</title>
+</head>
+
+<body>
+    <h1>Create Booking</h1>
+    <form method="post" action="/bookings">
+        <label>Class ID:</label><br>
+        <input type="number" id="class_id" name="class_id" required><br><br>
+
+        <label>From:</label><br>
+        <input type="datetime-local" id="booking_from" name="booking_from" required><br><br>
+
+        <label>To:</label><br>
+        <input type="datetime-local" id="booking_to" name="booking_to" required><br><br>
+
+        <label>Your Name:</label><br>
+        <input type="text" id="booking_owner" name="booking_owner" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if let Some(msg) = error_msg %}
+    <div class="alert">{{ msg }}</div>
+    {% endif %}
+</body>
+
+</html>
