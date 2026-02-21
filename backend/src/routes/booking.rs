@@ -1,12 +1,10 @@
 use axum::{
     extract::{State, Form},
-    http::StatusCode,
     response::Html,
 };
 use chrono::NaiveDateTime;
 use serde::{self, Deserialize, Deserializer};
 use sqlx::PgPool;
-use tracing::info;
 use askama::Template;
 
 use crate::models::booking::Booking;

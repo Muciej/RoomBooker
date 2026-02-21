@@ -3,7 +3,7 @@ use sqlx::{Pool, Postgres};
 use tower_http::cors::{Any, CorsLayer};
 use axum::{
     Router,
-    routing::{get, post},
+    routing::get,
 };
 use routes::{
     booking::{add_booking_form, get_bookings, post_booking},
