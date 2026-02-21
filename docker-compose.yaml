@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
     volumes:
       - type: bind
-        source: ./backend
+        source: .
         target: /app
   db:
     image: postgres:16

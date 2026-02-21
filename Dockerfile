@@ -3,13 +3,13 @@ FROM rust as builder
 WORKDIR /app
 
 # Cache dependencies
-COPY ./backend/Cargo.toml ./backend/Cargo.lock ./
+COPY ./Cargo.toml ./Cargo.lock ./
 RUN mkdir src && echo "fn main() {}" > src/main.rs
 RUN cargo build --release
 RUN rm -rf src
 
 # Build real app
-COPY ./backend ./
+COPY ./ ./
 RUN cargo build --release
 
 # Temporary until 2nd step is working properly
