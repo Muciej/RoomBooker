@@ -1,13 +1,17 @@
 use std::net::SocketAddr;
 use sqlx::{Pool, Postgres};
-use tower_http::cors::{Any, CorsLayer};
+use tower_http::{
+    cors::{Any, CorsLayer},
+    services::ServeDir,
+};
 use axum::{
     Router,
     routing::get,
 };
 use routes::{
     booking::{add_booking_form, get_bookings, post_booking},
-    classroom::get_classrooms
+    classroom::get_classrooms,
+    main_page::{get_index, get_root}
 };
 
 mod db;
@@ -36,10 +40,13 @@ async fn main() {
 
 fn build_app(pool: Pool<Postgres>) -> Router {
     Router::new()
+        .route("/", get(get_root))
+        .route("/index.html", get(get_index))
         .route("/classrooms", get(get_classrooms))
         .route("/bookings", get(get_bookings).post(post_booking))
         .route("/bookings/new", get(add_booking_form))
         .with_state(pool)
+        .nest_service("/static", ServeDir::new("static"))
         .layer(CorsLayer::new().allow_origin(Any).allow_methods(Any))
         .layer(tower_http::trace::TraceLayer::new_for_http())
 }

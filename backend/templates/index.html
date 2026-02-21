@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}RoomBooker{% endblock %}
+
+{% block content %}
+    <h1>Welcome to RoomBooker</h1>
+
+    <p>Please choose an option below:</p>
+
+    <div class="menu">
+    <a class="card" href="/bookings">View bookings</a>
+    <a class="card" href="/classrooms">Available classrooms</a>
+    <a class="card" href="/bookings/new">New booking</a>
+    </div>
+{% endblock %}

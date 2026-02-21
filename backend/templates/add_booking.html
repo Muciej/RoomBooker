@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Add Booking</title>
-</head>
+{% block title %}Adding new booking{% endblock %}
 
-<body>
+{% block content %}
+    <div class="menu">
+    <a class="card" href="/index.html">Go back to main page</a>
+    </div>
+
     <h1>Create Booking</h1>
     <form method="post" action="/bookings">
         <label>Class ID:</label><br>
@@ -26,6 +27,4 @@
     {% if let Some(msg) = error_msg %}
     <div class="alert">{{ msg }}</div>
     {% endif %}
-</body>
-
-</html>
+{% endblock %}

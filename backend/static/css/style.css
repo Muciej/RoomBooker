@@ -1,0 +1,12 @@
+.menu {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.card {
+    padding: 1rem 1.5rem;
+    background: #eee;
+    text-decoration: none;
+    border-radius: 8px;
+}

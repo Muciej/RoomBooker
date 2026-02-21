@@ -8,6 +8,7 @@ use sqlx::PgPool;
 use askama::Template;
 
 use crate::models::booking::Booking;
+use crate::routes::templates_structs::AddBookingTemplate;
 
 pub async fn get_bookings(State(pool): State<PgPool>) -> Html<String> {
     let bookings: Vec<Booking> = sqlx::query_as::<_, Booking>("SELECT * FROM bookings")
@@ -38,11 +39,6 @@ pub async fn get_bookings(State(pool): State<PgPool>) -> Html<String> {
     Html(html)
 }
 
-#[derive(Template)]
-#[template(path = "add_booking.html")]
-struct AddBookingTemplate {
-    error_msg: Option<String>,
-}
 
 pub async fn add_booking_form() -> Html<String> {
     let template = AddBookingTemplate{error_msg: None};
