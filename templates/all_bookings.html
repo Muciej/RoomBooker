@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}All Bookings{% endblock %}
+
+{% block content %}
+<h1>All Bookings</h1>
+
+{% if bookings.len() == 0 %}
+    <p class="empty">No bookings found.</p>
+{% else %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Owner</th>
+            <th>Classroom ID</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for b in bookings %}
+        <tr>
+            <td>{{ b.booking_id }}</td>
+            <td>{{ b.booking_owner }}</td>
+            <td>{{ b.class_id }}</td>
+            <td>{{ b.booking_from }}</td>
+            <td>{{ b.booking_to }}</td>
+            <td>
+                <span class="status status-{{ b.booking_confirmed | lower }}">
+                    {{ b.booking_confirmed }}
+                </span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<div class="menu">
+<a class="card" href="/index.html">Go back to main page</a>
+</div>
+{% endblock %}

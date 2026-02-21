@@ -2,6 +2,8 @@ use serde::{Serialize, Deserialize};
 use sqlx::FromRow;
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
+#[allow(dead_code)]
+
 pub struct Administrator {
     pub admin_id: i32,
     pub admin_name: Option<String>,

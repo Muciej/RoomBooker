@@ -10,3 +10,61 @@
     text-decoration: none;
     border-radius: 8px;
 }
+
+h1 {
+    margin-bottom: 1rem;
+}
+
+.empty {
+    color: #666;
+    font-style: italic;
+}
+
+.data-table {
+    border-collapse: collapse;
+    width: 100%;
+    background: white;
+}
+
+.data-table th,
+.data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: left;
+}
+
+.data-table thead {
+    background-color: #f4f6f8;
+}
+
+.data-table tr:hover {
+    background-color: #fafafa;
+}
+
+.status {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-accepted {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 1rem;
+    text-decoration: none;
+}

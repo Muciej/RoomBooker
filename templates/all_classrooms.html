@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}All Classrooms{% endblock %}
+
+{% block content %}
+<h1>All Classrooms</h1>
+
+{% if classrooms.len() == 0 %}
+    <p class="empty">No classrooms found.</p>
+{% else %}
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for c in classrooms %}
+        <tr>
+            <td>{{ c.class_id }}</td>
+
+            <td>
+                {% if c.class_name.is_some() %}
+                    {{ c.class_name.as_ref().unwrap() }}
+                {% endif %}
+            </td>
+
+            <td>
+                {% if c.class_number.is_some() %}
+                    {{ c.class_number.as_ref().unwrap() }}
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<div class="menu">
+<a class="card" href="/index.html">Go back to main page</a>
+</div>
+{% endblock %}

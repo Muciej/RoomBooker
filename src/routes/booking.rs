@@ -7,38 +7,16 @@ use serde::{self, Deserialize, Deserializer};
 use sqlx::PgPool;
 use askama::Template;
 
-use crate::models::booking::Booking;
-use crate::routes::templates_structs::AddBookingTemplate;
+use crate::db::get_all_bookings;
+use crate::routes::templates_structs::{AddBookingTemplate, AllBookingsTemplate};
 
 pub async fn get_bookings(State(pool): State<PgPool>) -> Html<String> {
-    let bookings: Vec<Booking> = sqlx::query_as::<_, Booking>("SELECT * FROM bookings")
-        .fetch_all(&pool)
-        .await
-        .unwrap_or_else(|_| vec![]);
+    let bookings = get_all_bookings(&pool).await;
 
-    let mut html = String::from("<h1>Bookings</h1><ul>");
-    html.push_str(&format!(
-        "<li> Total number of bookings: {}",
-        bookings.len()
-    ));
+    let template = AllBookingsTemplate { bookings };
 
-    for b in bookings {
-        html.push_str(&format!(
-            "<li>ID: {} | Owner: {} | Booked class ID: {} | From: {:?} | To: {:?} | Booking status {:?}</li>",
-            b.booking_id,
-            b.booking_owner,
-            b.class_id,
-            b.booking_from,
-            b.booking_to,
-            b.booking_confirmed
-        ));
-    }
-
-    html.push_str("</ul>");
-
-    Html(html)
+    Html(template.render().unwrap())
 }
-
 
 pub async fn add_booking_form() -> Html<String> {
     let template = AddBookingTemplate{error_msg: None};
