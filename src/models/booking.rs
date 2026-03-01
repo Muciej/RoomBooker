@@ -3,6 +3,8 @@ use sqlx::{FromRow, Type};
 use chrono::NaiveDateTime;
 use std::fmt;
 
+use crate::utils::parse_datetime_local;
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Type)]
 #[sqlx(type_name = "bookingstatus", rename_all = "lowercase")]
 pub enum BookingStatus {
@@ -29,4 +31,18 @@ impl fmt::Display for BookingStatus {
             BookingStatus::Rejected => write!(f, "Rejected"),
         }
     }
+}
+
+#[derive(Deserialize, Debug)]
+#[allow(dead_code)]
+pub struct CreateBooking {
+    pub class_id: i32,
+
+    #[serde(deserialize_with = "parse_datetime_local")]
+    pub booking_from: NaiveDateTime,
+
+    #[serde(deserialize_with = "parse_datetime_local")]
+    pub booking_to: NaiveDateTime,
+    
+    pub booking_owner: String,
 }

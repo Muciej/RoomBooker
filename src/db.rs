@@ -1,8 +1,8 @@
 use dotenvy::dotenv;
-use sqlx::{PgPool, Pool, Postgres, postgres::PgPoolOptions};
+use sqlx::{PgPool, Pool, Postgres, postgres::{PgPoolOptions, PgQueryResult}};
 use std::env;
 
-use crate::models::{booking::Booking, classroom::Classroom};
+use crate::models::{booking::{Booking, CreateBooking}, classroom::Classroom};
 
 pub async fn connect() -> PgPool {
     dotenv().ok();
@@ -14,14 +14,30 @@ pub async fn connect() -> PgPool {
         .expect("Failed to connect to the database")
 }
 
-pub async fn get_all_bookings(pool: &Pool<Postgres>) -> Vec<Booking> {
+pub async fn db_get_all_bookings(pool: &Pool<Postgres>) -> Vec<Booking> {
     sqlx::query_as::<_, Booking>("SELECT * FROM bookings")
         .fetch_all(pool)
         .await
         .unwrap_or_else(|_| vec![])
 }
 
-pub async fn get_all_classrooms(pool: &Pool<Postgres>) -> Vec<Classroom> {
+pub async fn db_insert_new_booking(pool: &Pool<Postgres>, new_booking: CreateBooking) -> sqlx::Result<PgQueryResult> {
+    sqlx::query!(
+        r#"
+        INSERT INTO bookings
+            (booking_id, class_id, booking_from, booking_to, booking_owner, booking_confirmed)
+        VALUES (DEFAULT, $1, $2, $3, $4, 'accepted')
+        "#,
+        new_booking.class_id,
+        new_booking.booking_from,
+        new_booking.booking_to,
+        new_booking.booking_owner
+    )
+    .execute(pool)
+    .await
+}
+
+pub async fn db_get_all_classrooms(pool: &Pool<Postgres>) -> Vec<Classroom> {
     sqlx::query_as::<_, Classroom>("SELECT * FROM classrooms")
         .fetch_all(pool)
         .await

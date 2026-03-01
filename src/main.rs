@@ -14,6 +14,7 @@ use routes::{
     main_page::{get_index, get_root}
 };
 
+mod utils;
 mod db;
 mod models;
 mod routes;
