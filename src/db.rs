@@ -1,12 +1,8 @@
-use dotenvy::dotenv;
 use sqlx::{PgPool, Pool, Postgres, postgres::{PgPoolOptions, PgQueryResult}};
-use std::env;
 
 use crate::models::{booking::{Booking, CreateBooking}, classroom::Classroom};
 
-pub async fn connect() -> PgPool {
-    dotenv().ok();
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+pub async fn connect(database_url: &String) -> PgPool {
     PgPoolOptions::new()
         .max_connections(5)
         .connect(&database_url)

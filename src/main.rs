@@ -13,6 +13,8 @@ use routes::{
     classroom::get_classrooms,
     main_page::{get_index, get_root}
 };
+use dotenvy::dotenv;
+use std::env;
 
 mod utils;
 mod db;
@@ -21,11 +23,15 @@ mod routes;
 
 #[tokio::main]
 async fn main() {
+    // Load env file
+    dotenv().ok();
+
     // Initialize tracing
     tracing_subscriber::fmt().with_env_filter("debug").init();
 
     // Initialize database
-    let pool = db::connect().await;
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let pool = db::connect(&database_url).await;
 
     // Build routes
     let app = build_app(pool);
