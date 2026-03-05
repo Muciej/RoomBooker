@@ -31,7 +31,7 @@ async fn main() {
 
     // Initialize database
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = db::connect(&database_url).await;
+    let pool = db::connect(&database_url).await.expect("Couldn't connect to the database!");
 
     // Build routes
     let app = build_app(pool);

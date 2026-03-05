@@ -2,22 +2,29 @@ use sqlx::{PgPool, Pool, Postgres, postgres::{PgPoolOptions, PgQueryResult}};
 
 use crate::models::{booking::{Booking, CreateBooking}, classroom::Classroom};
 
-pub async fn connect(database_url: &String) -> PgPool {
+#[derive(Debug)]
+pub enum DBError {
+    ConnectionError,
+    InvalidInsert(String),
+    DBInternalError,
+}
+
+pub async fn connect(database_url: &String) -> Result<PgPool, DBError> {
     PgPoolOptions::new()
         .max_connections(5)
         .connect(&database_url)
         .await
-        .expect("Failed to connect to the database")
+        .map_err(|_| DBError::ConnectionError)
 }
 
-pub async fn db_get_all_bookings(pool: &Pool<Postgres>) -> Vec<Booking> {
+pub async fn db_get_all_bookings(pool: &Pool<Postgres>) -> Result<Vec<Booking>, DBError> {
     sqlx::query_as::<_, Booking>("SELECT * FROM bookings")
         .fetch_all(pool)
         .await
-        .unwrap_or_else(|_| vec![])
+        .map_err(|_| DBError::DBInternalError)
 }
 
-pub async fn db_insert_new_booking(pool: &Pool<Postgres>, new_booking: CreateBooking) -> sqlx::Result<PgQueryResult> {
+pub async fn db_insert_new_booking(pool: &Pool<Postgres>, new_booking: CreateBooking) -> Result<PgQueryResult, DBError> {
     sqlx::query!(
         r#"
         INSERT INTO bookings
@@ -31,11 +38,12 @@ pub async fn db_insert_new_booking(pool: &Pool<Postgres>, new_booking: CreateBoo
     )
     .execute(pool)
     .await
+    .map_err(|_| DBError::DBInternalError)
 }
 
-pub async fn db_get_all_classrooms(pool: &Pool<Postgres>) -> Vec<Classroom> {
+pub async fn db_get_all_classrooms(pool: &Pool<Postgres>) -> Result<Vec<Classroom>, DBError> {
     sqlx::query_as::<_, Classroom>("SELECT * FROM classrooms")
         .fetch_all(pool)
         .await
-        .unwrap_or_else(|_| vec![])
+        .map_err(|_| DBError::DBInternalError)
 }
