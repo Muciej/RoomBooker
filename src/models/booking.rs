@@ -1,6 +1,6 @@
-use serde::{Serialize, Deserialize};
-use sqlx::{FromRow, Type};
 use chrono::NaiveDateTime;
+use serde::{Deserialize, Serialize};
+use sqlx::{FromRow, Type};
 use std::fmt;
 
 use crate::utils::parse_datetime_local;
@@ -33,6 +33,19 @@ impl fmt::Display for BookingStatus {
     }
 }
 
+pub fn sort_bookings_by_start_date(bookings: &mut Vec<Booking>) {
+    bookings.sort_by(|b1, b2| {
+        if b1.booking_from == b2.booking_from {
+            return std::cmp::Ordering::Equal;
+        } else {
+            match b1.booking_from < b2.booking_from {
+                true => std::cmp::Ordering::Less,
+                false => std::cmp::Ordering::Greater,
+            }
+        }
+    });
+}
+
 #[derive(Deserialize, Debug)]
 #[allow(dead_code)]
 pub struct CreateBooking {
@@ -43,6 +56,6 @@ pub struct CreateBooking {
 
     #[serde(deserialize_with = "parse_datetime_local")]
     pub booking_to: NaiveDateTime,
-    
+
     pub booking_owner: String,
 }

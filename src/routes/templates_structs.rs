@@ -5,6 +5,7 @@ use crate::models::{booking::Booking, classroom::Classroom};
 #[derive(Template)]
 #[template(path = "add_booking.html")]
 pub struct AddBookingTemplate {
+    pub classrooms: Vec<Classroom>,
     pub error_msg: Option<String>,
 }
 

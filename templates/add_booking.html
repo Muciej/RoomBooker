@@ -9,8 +9,23 @@
 
     <h1>Create Booking</h1>
     <form method="post" action="/bookings">
-        <label>Class ID:</label><br>
-        <input type="number" id="class_id" name="class_id" required><br><br>
+        <label for="class_id">Classroom:</label><br>
+        <select id="class_id" name="class_id" required>
+            <option value="">Select classroom</option>
+
+            {% for c in classrooms %}
+            <option value="{{ c.class_id }}">
+                {% if c.class_name.is_some() %}
+                    {{ c.class_name.as_ref().unwrap() }}
+                {% endif %}
+                {% if c.class_number.is_some() %}
+                    ({{ c.class_number.as_ref().unwrap() }})
+                {% endif %}
+            </option>
+            {% endfor %}
+
+        </select>
+        <br><br>
 
         <label>From:</label><br>
         <input type="datetime-local" id="booking_from" name="booking_from" required><br><br>
