@@ -11,27 +11,25 @@
 <table class="data-table">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Owner</th>
-            <th>Classroom ID</th>
+            <th>Classroom</th>
             <th>From</th>
             <th>To</th>
-            <th>Status</th>
+            <!-- <th>Status</th> -->
         </tr>
     </thead>
     <tbody>
         {% for b in bookings %}
         <tr>
-            <td>{{ b.booking_id }}</td>
             <td>{{ b.booking_owner }}</td>
-            <td>{{ b.class_id }}</td>
+            <td>{{ classroom_data.get(b.class_id).unwrap() }}</td>
             <td>{{ b.booking_from }}</td>
             <td>{{ b.booking_to }}</td>
-            <td>
+            <!-- <td>
                 <span class="status status-{{ b.booking_confirmed | lower }}">
                     {{ b.booking_confirmed }}
                 </span>
-            </td>
+            </td> -->
         </tr>
         {% endfor %}
     </tbody>

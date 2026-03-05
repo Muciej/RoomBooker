@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use askama::Template;
 use axum::{
     extract::{Form, State},
@@ -11,9 +13,17 @@ use crate::routes::templates_structs::{AddBookingTemplate, AllBookingsTemplate};
 
 pub async fn get_bookings(State(pool): State<PgPool>) -> Html<String> {
     let mut bookings = db_get_all_bookings(&pool).await.unwrap_or(vec![]);
+    let classrooms = db_get_all_classrooms(&pool).await.unwrap_or(vec![]);
+
     sort_bookings_by_start_date(&mut bookings);
 
-    let template = AllBookingsTemplate { bookings };
+    let mut classrooms_id_to_data_map = HashMap::new();
+    for c in classrooms {
+        let data_str = format!("{}\t{}", c.class_name.unwrap_or("".to_string()), c.class_number.map(|n| n.to_string()).unwrap_or("".to_string()));
+        classrooms_id_to_data_map.insert(c.class_id, data_str);
+    }
+
+    let template = AllBookingsTemplate { bookings, classroom_data: classrooms_id_to_data_map };
 
     Html(template.render().unwrap())
 }

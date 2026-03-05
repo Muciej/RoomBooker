@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use askama::Template;
 
 use crate::models::{booking::Booking, classroom::Classroom};
@@ -18,6 +20,7 @@ pub struct IndexTemplate {}
 #[template(path = "all_bookings.html")]
 pub struct AllBookingsTemplate {
     pub bookings: Vec<Booking>,
+    pub classroom_data: HashMap<i32, String>,
 }
 
 #[derive(Template)]
