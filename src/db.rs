@@ -46,6 +46,10 @@ pub async fn db_insert_new_booking(pool: &Pool<Postgres>, new_booking: CreateBoo
         return Err(DBError::InvalidInsert("Maximal allowed booking duration is 8 hours!".to_string()))
     }
 
+    if new_booking.booking_to <= new_booking.booking_from {
+        return Err(DBError::InvalidInsert("Invalid end of the booking!".to_string()))
+    }
+
     sqlx::query!(
         r#"
         INSERT INTO bookings
