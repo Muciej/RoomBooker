@@ -11,7 +11,6 @@
 <table class="data-table">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Name</th>
             <th>Number</th>
         </tr>
@@ -19,8 +18,6 @@
     <tbody>
         {% for c in classrooms %}
         <tr>
-            <td>{{ c.class_id }}</td>
-
             <td>
                 {% if c.class_name.is_some() %}
                     {{ c.class_name.as_ref().unwrap() }}
