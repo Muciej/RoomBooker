@@ -1,4 +1,4 @@
 INSERT INTO classrooms VALUES
-(5, 'Czarna'),
-(6, 'Biała'),
-(7, 'Dół');
+(0, 'Czarna'),
+(1, 'Biała'),
+(2, 'Dół');

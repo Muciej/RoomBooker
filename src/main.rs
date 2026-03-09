@@ -6,10 +6,10 @@ use tower_http::{
 };
 use axum::{
     Router,
-    routing::get,
+    routing::{post, get},
 };
 use routes::{
-    booking::{add_booking_form, get_bookings, post_booking},
+    booking::{add_booking_form, get_bookings, post_booking, delete_booking},
     classroom::get_classrooms,
     main_page::{get_index, get_root}
 };
@@ -52,6 +52,7 @@ fn build_app(pool: Pool<Postgres>) -> Router {
         .route("/classrooms", get(get_classrooms))
         .route("/bookings", get(get_bookings).post(post_booking))
         .route("/bookings/new", get(add_booking_form))
+        .route("/bookings/delete", post(delete_booking))
         .with_state(pool)
         .nest_service("/static", ServeDir::new("static"))
         .layer(CorsLayer::new().allow_origin(Any).allow_methods(Any))

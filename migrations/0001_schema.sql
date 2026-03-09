@@ -12,7 +12,8 @@ CREATE TABLE Bookings(
     booking_from TIMESTAMP NOT NULL,
     booking_to TIMESTAMP NOT NULL,
     booking_owner VARCHAR(80) NOT NULL,
-    booking_confirmed bookingstatus NOT NULL
+    booking_confirmed bookingstatus NOT NULL,
+    booking_delete_hash VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE Administrators(

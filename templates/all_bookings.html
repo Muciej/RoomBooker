@@ -6,7 +6,7 @@
 <h1>All Bookings</h1>
 
 {% if bookings.len() == 0 %}
-    <p class="empty">No bookings found.</p>
+<p class="empty">No bookings found.</p>
 {% else %}
 <table class="data-table">
     <thead>
@@ -15,7 +15,7 @@
             <th>Classroom</th>
             <th>From</th>
             <th>To</th>
-            <!-- <th>Status</th> -->
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -25,11 +25,11 @@
             <td>{{ classroom_data.get(b.class_id).unwrap() }}</td>
             <td>{{ b.booking_from }}</td>
             <td>{{ b.booking_to }}</td>
-            <!-- <td>
-                <span class="status status-{{ b.booking_confirmed | lower }}">
-                    {{ b.booking_confirmed }}
-                </span>
-            </td> -->
+            <td>
+                <button class="delete-btn" onclick="openDeleteModal({{ b.booking_id }})">
+                    Delete
+                </button>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -37,6 +37,57 @@
 {% endif %}
 
 <div class="menu">
-<a class="card" href="/index.html">Go back to main page</a>
+    <a class="card" href="/index.html">Go back to main page</a>
 </div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h2>Delete booking</h2>
+
+        <form method="post" action="/bookings/delete">
+            <input type="hidden" id="delete_booking_id" name="booking_id">
+
+            <label for="delete_code">Enter delete code:</label>
+            <input type="password" id="delete_code" name="delete_code" required>
+
+            <div class="modal-buttons">
+                <button type="button" class="confirm-delete" onclick="attemptDeleteBooking()">Delete</button>
+                <button type="button" onclick="closeDeleteModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal(bookingId) {
+        document.getElementById("delete_booking_id").value = bookingId;
+        document.getElementById("deleteModal").style.display = "flex";
+    }
+
+    function closeDeleteModal() {
+        document.getElementById("deleteModal").style.display = "none";
+    }
+
+    async function attemptDeleteBooking() {
+        let id = parseInt(document.getElementById("delete_booking_id").value);
+        let code = document.getElementById("delete_code").value;
+        const response = await fetch("/bookings/delete", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                booking_id: id,
+                delete_code: code
+            })
+        });
+
+        if (response.ok) {
+            location.reload()
+        } else {
+            alert("Wrong password!");
+        }
+    }
+</script>
+
 {% endblock %}

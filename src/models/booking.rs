@@ -21,6 +21,7 @@ pub struct Booking {
     pub booking_to: NaiveDateTime,
     pub booking_owner: String,
     pub booking_confirmed: BookingStatus,
+    pub booking_delete_hash: String,
 }
 
 impl fmt::Display for BookingStatus {
@@ -58,4 +59,12 @@ pub struct CreateBooking {
     pub booking_to: NaiveDateTime,
 
     pub booking_owner: String,
+
+    pub booking_delete_code: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct DeleteBooking {
+    pub booking_id: i32,
+    pub delete_code: String,
 }
