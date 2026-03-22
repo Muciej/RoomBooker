@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use askama::Template;
 use axum::{
+    Json,
     body::Body,
     extract::{Form, State},
     http::StatusCode,
@@ -14,6 +15,7 @@ use crate::db::{
 };
 use crate::models::booking::{CreateBooking, DeleteBooking, sort_bookings_by_start_date};
 use crate::routes::templates_structs::{AddBookingTemplate, AllBookingsTemplate};
+use crate::utils::ApiResponse;
 
 pub async fn get_bookings(State(pool): State<PgPool>) -> Html<String> {
     let mut bookings = db_get_all_bookings(&pool).await.unwrap_or(vec![]);
@@ -43,54 +45,50 @@ pub async fn get_bookings(State(pool): State<PgPool>) -> Html<String> {
 
 pub async fn add_booking_form(State(pool): State<PgPool>) -> Html<String> {
     let classrooms = db_get_all_classrooms(&pool).await.unwrap_or(vec![]);
-    let template = AddBookingTemplate {
-        error_msg: None,
-        classrooms,
-    };
+    let template = AddBookingTemplate { classrooms };
     Html(template.render().unwrap())
 }
 
 pub async fn post_booking(
     State(pool): State<PgPool>,
     Form(input): Form<CreateBooking>,
-) -> Html<String> {
-    let classrooms = db_get_all_classrooms(&pool).await.unwrap_or(vec![]);
+) -> Response {
     let result = db_insert_new_booking(&pool, input).await;
 
     match result {
-        Ok(_) => Html(
-            AddBookingTemplate {
-                error_msg: Some("Booking created!".into()),
-                classrooms,
-            }
-            .render()
-            .unwrap(),
-        ),
+        Ok(_) => (
+            StatusCode::OK,
+            Json(ApiResponse {
+                success: true,
+                message: "Booking created successfully".to_string(),
+            }),
+        )
+            .into_response(),
         Err(e) => match e {
-            DBError::InvalidInsert(s) => Html(
-                AddBookingTemplate {
-                    error_msg: Some(format!("Error: {}", s)),
-                    classrooms,
-                }
-                .render()
-                .unwrap(),
-            ),
-            DBError::ConnectionError => Html(
-                AddBookingTemplate {
-                    error_msg: Some("Lost connection with the database!".to_owned()),
-                    classrooms,
-                }
-                .render()
-                .unwrap(),
-            ),
-            _ => Html(
-                AddBookingTemplate {
-                    error_msg: Some("Internal database error occured!".to_owned()),
-                    classrooms,
-                }
-                .render()
-                .unwrap(),
-            ),
+            DBError::InvalidInsert(s) => (
+                StatusCode::EXPECTATION_FAILED,
+                Json(ApiResponse {
+                    success: false,
+                    message: s,
+                }),
+            )
+                .into_response(),
+            DBError::ConnectionError => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(ApiResponse {
+                    success: false,
+                    message: "Lost connetion with the database!".to_string(),
+                }),
+            )
+                .into_response(),
+            _ => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                Json(ApiResponse {
+                    success: false,
+                    message: "Internal server error occured!".to_string(),
+                }),
+            )
+                .into_response(),
         },
     }
 }

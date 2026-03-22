@@ -3,12 +3,14 @@
 {% block title %}Adding new booking{% endblock %}
 
 {% block content %}
+    <div id="message-container" style="display:none;"></div>
+
     <div class="menu">
     <a class="card" href="/index.html">Go back to main page</a>
     </div>
 
     <h1>Create Booking</h1>
-    <form method="post" action="/bookings">
+    <form onsubmit="attemptCreateBooking(event)">
         <label for="class_id">Classroom:</label><br>
         <select id="class_id" name="class_id" required>
             <option value="">Select classroom</option>
@@ -42,7 +44,32 @@
         <button type="submit">Submit</button>
     </form>
 
-    {% if let Some(msg) = error_msg %}
-    <div class="alert">{{ msg }}</div>
-    {% endif %}
+    <script>
+        function showMessage(msg, type) {
+            const container = document.getElementById("message-container");
+
+            container.innerText = msg;
+            container.className = type === "success" ? "alert-success" : "alert-error";
+            container.style.display = "block";
+        }
+
+        async function attemptCreateBooking(event) {
+            event.preventDefault();
+
+            const response = await fetch("/bookings", {
+                method: "POST",
+                body: new URLSearchParams(new FormData(event.target))
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage(data.message, "success");
+            } else {
+                showMessage(data.message, "error");
+            }
+        }
+
+    </script>
+
+
 {% endblock %}
