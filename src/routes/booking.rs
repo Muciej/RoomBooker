@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use askama::Template;
 use axum::{
     body::Body,
-    extract::{self, Form, State},
+    extract::{Form, State},
     http::StatusCode,
     response::{Html, IntoResponse, Response},
 };
@@ -97,7 +97,7 @@ pub async fn post_booking(
 
 pub async fn delete_booking(
     State(pool): State<PgPool>,
-    extract::Json(delete_booking): extract::Json<DeleteBooking>,
+    Form(delete_booking): Form<DeleteBooking>,
 ) -> Response {
     let result = db_delete_booking(&pool, delete_booking).await;
     if let Ok(_) = result {

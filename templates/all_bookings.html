@@ -69,20 +69,10 @@
     }
 
     async function attemptDeleteBooking(event) {
-
         event.preventDefault();
-        let id = parseInt(document.getElementById("delete_booking_id").value);
-        let code = document.getElementById("delete_code").value;
-
         const response = await fetch("/bookings/delete", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                booking_id: id,
-                delete_code: code
-            })
+            body: new URLSearchParams(new FormData(event.target))
         });
 
         if (response.ok) {
