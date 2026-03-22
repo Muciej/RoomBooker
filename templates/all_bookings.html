@@ -44,14 +44,14 @@
     <div class="modal-content">
         <h2>Delete booking</h2>
 
-        <form method="post" action="/bookings/delete">
+        <form onsubmit="attemptDeleteBooking(event)">
             <input type="hidden" id="delete_booking_id" name="booking_id">
 
             <label for="delete_code">Enter delete code:</label>
             <input type="password" id="delete_code" name="delete_code" required>
 
             <div class="modal-buttons">
-                <button type="button" class="confirm-delete" onclick="attemptDeleteBooking()">Delete</button>
+                <button type="submit" class="confirm-delete" onclick="attemptDeleteBooking()">Delete</button>
                 <button type="button" onclick="closeDeleteModal()">Cancel</button>
             </div>
         </form>
@@ -68,9 +68,12 @@
         document.getElementById("deleteModal").style.display = "none";
     }
 
-    async function attemptDeleteBooking() {
+    async function attemptDeleteBooking(event) {
+
+        event.preventDefault();
         let id = parseInt(document.getElementById("delete_booking_id").value);
         let code = document.getElementById("delete_code").value;
+
         const response = await fetch("/bookings/delete", {
             method: "POST",
             headers: {
