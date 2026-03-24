@@ -8,17 +8,20 @@ use axum::{
     http::StatusCode,
     response::{Html, IntoResponse, Response},
 };
+use chrono::{Duration, Utc};
 use sqlx::PgPool;
 
 use crate::db::{
-    DBError, db_delete_booking, db_get_all_bookings, db_get_all_classrooms, db_insert_new_booking,
+    DBError, db_delete_booking, db_get_all_classrooms, db_get_filtered_bookings, db_insert_new_booking
 };
 use crate::models::booking::{CreateBooking, DeleteBooking, sort_bookings_by_start_date};
 use crate::routes::templates_structs::{AddBookingTemplate, AllBookingsTemplate};
 use crate::utils::ApiResponse;
 
 pub async fn get_bookings(State(pool): State<PgPool>) -> Html<String> {
-    let mut bookings = db_get_all_bookings(&pool).await.unwrap_or(vec![]);
+    let now = Utc::now().naive_utc();
+    let one_hour_ago = now - Duration::hours(1);
+    let mut bookings = db_get_filtered_bookings(&pool, |booking| booking.booking_to > one_hour_ago).await.unwrap_or(vec![]);
     let classrooms = db_get_all_classrooms(&pool).await.unwrap_or(vec![]);
 
     sort_bookings_by_start_date(&mut bookings);
