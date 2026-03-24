@@ -14,6 +14,7 @@ use routes::{
     main_page::{get_index, get_root}
 };
 use dotenvy::dotenv;
+use tracing_subscriber::EnvFilter;
 use std::env;
 
 mod utils;
@@ -27,7 +28,7 @@ async fn main() {
     dotenv().ok();
 
     // Initialize tracing
-    tracing_subscriber::fmt().with_env_filter("debug").init();
+    tracing_subscriber::fmt().with_env_filter(EnvFilter::from_default_env()).init();
 
     // Initialize database
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
@@ -37,7 +38,7 @@ async fn main() {
     let app = build_app(pool);
 
     // Start server
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
     println!("🚀 Server running on http://{}", addr);
 
     axum::serve(tokio::net::TcpListener::bind(addr).await.unwrap(), app)

@@ -1,31 +1,32 @@
-FROM rust as builder
+FROM rust:trixie AS base
+
+ENV USER=root
+ENV SQLX_OFFLINE=true
+# Some tower/axum variables?
 
 WORKDIR /app
+RUN cargo init
+COPY Cargo.toml /app/Cargo.toml
+RUN cargo fetch
+COPY . /app
+COPY .sqlx/ /app/.sqlx
 
-# Cache dependencies
-COPY ./Cargo.toml ./Cargo.lock ./
-RUN mkdir src && echo "fn main() {}" > src/main.rs
-RUN cargo build --release
-RUN rm -rf src
+FROM base AS development
 
-# Build real app
-COPY ./ ./
-RUN cargo build --release
+CMD ["cargo", "run", "--offline"]
 
-# Temporary until 2nd step is working properly
+FROM base as builder
+
+RUN cargo build --release --offline
+
+FROM debian:bookworm-slim as production
+
+RUN useradd -m appuser
+USER appuser
+
+COPY --from=builder /app/target/release/Roombooker /Roombooker
+COPY static/ /static
+
 EXPOSE 3000
-CMD ["/app/target/release/backend"]
 
-
-# FROM debian:bookworm-slim
-
-# RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
-
-# WORKDIR /app
-
-# COPY --from=builder /app/target/release/backend /app/backend # doesn't work for some reason
-# checked and the path is valid during builder step but for some reason /app/backend is not present afterwards
-
-# EXPOSE 3000
-
-# CMD ["/app/target/release/backend"]
+CMD ["/Roombooker"]

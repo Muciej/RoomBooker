@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO bookings\n            (booking_id, class_id, booking_from, booking_to, booking_owner, booking_confirmed, booking_delete_hash)\n        VALUES (DEFAULT, $1, $2, $3, $4, 'accepted', $5)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Timestamp",
+        "Timestamp",
+        "Varchar",
+        "Varchar"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "b04d279660bb224d58398702dbba2524d811b8c794144ef1e6cea6c79a90134d"
+}
