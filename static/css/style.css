@@ -6,8 +6,9 @@
 
 .card {
     padding: 1rem 1.5rem;
-    background: #eee;
+    background: #89d6ff;
     text-decoration: none;
+    color:#000000 ;
     border-radius: 8px;
 }
 
@@ -129,4 +130,88 @@ h1 {
     padding: 10px;
     border-radius: 6px;
     margin-bottom: 1rem;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+footer a {
+  color: #555;
+  text-decoration: none;
+}
+
+form {
+    background: white;
+    padding: 24px;
+    border-radius: 10px;
+    max-width: 500px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+form label {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+form input,
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+form input:focus,
+form select:focus {
+    outline: none;
+    border-color: #89d6ff;
+    box-shadow: 0 0 0 3px rgba(137,214,255,0.3);
+}
+
+form button[type="submit"] {
+    background: #89d6ff;
+    color: black;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 400;
+    transition: background 0.2s;
+}
+
+form button[type="submit"]:hover {
+    background: #6ec8f5;
+}
+
+#message-container {
+    max-width: 500px;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-container input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.checkbox-container label {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color:#6ec8f5
 }
