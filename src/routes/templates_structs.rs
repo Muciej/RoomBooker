@@ -14,6 +14,9 @@ pub struct AddBookingTemplate {
 #[template(path = "index.html")]
 pub struct IndexTemplate {}
 
+#[derive(Template)]
+#[template(path = "privacy_policy.html")]
+pub struct PrivacyPolicyTemplate {}
 
 #[derive(Template)]
 #[template(path = "all_bookings.html")]

@@ -11,7 +11,8 @@ use axum::{
 use routes::{
     booking::{add_booking_form, get_bookings, post_booking, delete_booking},
     classroom::get_classrooms,
-    main_page::{get_index, get_root}
+    main_page::{get_index, get_root},
+    privacy_policy::get_privacy_policy
 };
 use dotenvy::dotenv;
 use tracing_subscriber::EnvFilter;
@@ -54,6 +55,7 @@ fn build_app(pool: Pool<Postgres>) -> Router {
         .route("/bookings", get(get_bookings).post(post_booking))
         .route("/bookings/new", get(add_booking_form))
         .route("/bookings/delete", post(delete_booking))
+        .route("/privacy_policy", get(get_privacy_policy))
         .with_state(pool)
         .nest_service("/static", ServeDir::new("static"))
         .layer(CorsLayer::new().allow_origin(Any).allow_methods(Any))
